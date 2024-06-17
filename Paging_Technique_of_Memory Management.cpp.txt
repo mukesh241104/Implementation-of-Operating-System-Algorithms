@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Paging {
+public:
+    int page_size;
+    int num_pages;
+    vector<int> frame_table;
+
+    Paging(int pageSize, int numPages) : page_size(pageSize), num_pages(numPages), frame_table(numPages, -1) {}
+
+    void mapPage(int logical_page, int frame) {
+        if (logical_page < num_pages) {
+            frame_table[logical_page] = frame;
+        }
+    }
+
+    int getFrame(int logical_page) {
+        if (logical_page < num_pages) {
+            return frame_table[logical_page];
+        }
+        return -1;
+    }
+
+    void displayPageTable() {
+        cout << "Page Table:" << endl;
+        cout << "Page No.\tFrame No." << endl;
+        for (int i = 0; i < num_pages; i++) {
+            cout << i << "\t\t" << frame_table[i] << endl;
+        }
+    }
+};
+
+int main() {
+    int page_size = 4;
+    int num_pages = 5;
+
+    Paging paging(page_size, num_pages);
+
+    paging.mapPage(0, 2);
+    paging.mapPage(1, 4);
+    paging.mapPage(2, 1);
+    paging.mapPage(3, 3);
+    paging.mapPage(4, 0);
+
+    paging.displayPageTable();
+
+    return 0;
+}

@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void SSTF(vector<int>& requests, int head) {
+    int seek_count = 0;
+    int distance, cur_track;
+    vector<int> seek_sequence;
+    vector<bool> visited(requests.size(), false);
+
+    for (int i = 0; i < requests.size(); i++) {
+        int min_distance = INT_MAX;
+        int min_index = -1;
+
+        for (int j = 0; j < requests.size(); j++) {
+            if (!visited[j]) {
+                distance = abs(requests[j] - head);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    min_index = j;
+                }
+            }
+        }
+
+        visited[min_index] = true;
+        seek_count += min_distance;
+        head = requests[min_index];
+        seek_sequence.push_back(head);
+    }
+
+    cout << "Total seek operations (SSTF): " << seek_count << endl;
+    cout << "Seek Sequence (SSTF): ";
+    for (int i = 0; i < seek_sequence.size(); i++) {
+        cout << seek_sequence[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    vector<int> requests = {98, 183, 37, 122, 14, 124, 65, 67};
+    int head = 53;
+
+    SSTF(requests, head);
+
+    return 0;
+}

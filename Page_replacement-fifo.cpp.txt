@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+void fifoPageReplacement(vector<int>& pages, int frame_size) {
+    queue<int> frames;
+    vector<int> frame_table(frame_size, -1);
+    int page_faults = 0;
+
+    for (int page : pages) {
+        bool page_found = false;
+        for (int frame : frame_table) {
+            if (frame == page) {
+                page_found = true;
+                break;
+            }
+        }
+
+        if (!page_found) {
+            page_faults++;
+            if (frames.size() == frame_size) {
+                int old_page = frames.front();
+                frames.pop();
+                for (int& frame : frame_table) {
+                    if (frame == old_page) {
+                        frame = page;
+                        break;
+                    }
+                }
+            } else {
+                for (int& frame : frame_table) {
+                    if (frame == -1) {
+                        frame = page;
+                        break;
+                    }
+                }
+            }
+            frames.push(page);
+        }
+    }
+
+    cout << "Page Faults (FIFO): " << page_faults << endl;
+}
+
+int main() {
+    vector<int> pages = {1, 3, 0, 3, 5, 6, 3};
+    int frame_size = 3;
+
+    fifoPageReplacement(pages, frame_size);
+
+    return 0;
+}
